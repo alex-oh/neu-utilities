@@ -1,0 +1,21 @@
+form {
+    padding: 0rem .5rem;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: row;
+}
+
+input, select {
+    margin-bottom: .5rem;
+    margin-left: auto;
+}
+
+.form-inner label {
+    margin: .25rem;
+}
+
+.submit-button {
+
+}
