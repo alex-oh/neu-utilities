@@ -87,7 +87,6 @@ function AllFacilities() {
                 type? Graph displays usage of water or electricity or gas at one
                 time
             </p>
-            {/* <DataTable data={buildingsDataSample} /> */}
             <MaterialReactTable table={table} />
         </div>
     );

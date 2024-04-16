@@ -10,6 +10,7 @@ function App() {
             <div className="container">
                 <Nav />
                 <Dashboard />
+                <footer>© 2024 Alex Oh & Ethan Olesinski</footer>
             </div>
         </HashRouter>
     );
