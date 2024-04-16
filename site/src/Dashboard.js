@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router";
-import "./home.css";
+import "./dashboard.css";
 import Sidebar from "./components/Sidebar";
 import BuildingView from "./components/BuildingView";
 import BuildingAdd from "./components/BuildingAdd";
