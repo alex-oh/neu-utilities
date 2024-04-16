@@ -1,8 +1,10 @@
 .dashboard-main {
     display: flex;
     flex-direction: row;
+    align-items: flex-start;
 }
 
 .dashboard-content {
     margin: 0rem 1rem;
+    max-width: 70%;
 }

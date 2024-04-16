@@ -22,7 +22,7 @@ function AllFacilities() {
                         beginAtZero: true,
                     },
                 },
-                indexAxis: 'y',
+                indexAxis: "y",
             },
         });
         return () => {
@@ -39,7 +39,9 @@ function AllFacilities() {
                 type? Graph displays usage of water or electricity or gas at one
                 time
             </p>
-            <canvas id="chartContainer"></canvas>
+            <div className="chartContainer">
+                <canvas id="chartContainer"></canvas>
+            </div>
         </div>
     );
 }
