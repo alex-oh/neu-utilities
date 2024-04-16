@@ -1,17 +1,82 @@
-import { useEffect } from "react";
-import Chart from "chart.js/auto";
+import { useEffect, useMemo, useState } from "react";
+// import Chart from "chart.js/auto";
 import buildingsDataSample from "../sampleData/buildings.js";
-import DataTable from "./DataTable.js";
-import { useReactTable } from "@tanstack/react-table";
+// import DataTable from "./DataTable.js";
 
-import Facility from "./Types.ts";
+import {
+    MaterialReactTable,
+    useMaterialReactTable,
+} from "material-react-table";
 
 function AllFacilities() {
-    //react
-    const table = useReactTable({ columns, data });
+    const [data, setData] = useState([]);
 
-    /** @type {Facility[]} */
-    const [data, setData] = React.useState([]);
+    useEffect(() => {
+        // query data needed for table
+        setData(buildingsDataSample);
+    }, []);
+
+    const columns = useMemo(
+        () => [
+            {
+                accessorKey: "building_id", //simple recommended way to define a column
+                header: "Id",
+                muiTableHeadCellProps: { style: { color: "green" } }, //custom props
+                enableHiding: false, //disable a feature for this column
+            },
+            {
+                accessorKey: "building_name", //simple recommended way to define a column
+                header: "Name",
+                muiTableHeadCellProps: { style: { color: "green" } }, //custom props
+                enableHiding: false, //disable a feature for this column
+            },
+            {
+                accessorKey: "max_occupancy", //simple recommended way to define a column
+                header: "Occupancy",
+                muiTableHeadCellProps: { style: { color: "green" } }, //custom props
+                enableHiding: false, //disable a feature for this column
+            },
+            {
+                accessorKey: "hours_open", //simple recommended way to define a column
+                header: "Daily Hours",
+                muiTableHeadCellProps: { style: { color: "green" } }, //custom props
+                enableHiding: false, //disable a feature for this column
+            },
+            {
+                accessorKey: "campus_id", //simple recommended way to define a column
+                header: "Campus Id",
+                muiTableHeadCellProps: { style: { color: "green" } }, //custom props
+                enableHiding: false, //disable a feature for this column
+            },
+            {
+                accessorKey: "total_electricity", //simple recommended way to define a column
+                header: "Electricity Usage",
+                muiTableHeadCellProps: { style: { color: "green" } }, //custom props
+                enableHiding: false, //disable a feature for this column
+            },
+            {
+                accessorKey: "total_water", //simple recommended way to define a column
+                header: "Water Usage",
+                muiTableHeadCellProps: { style: { color: "green" } }, //custom props
+                enableHiding: false, //disable a feature for this column
+            },
+            {
+                accessorKey: "total_heating", //simple recommended way to define a column
+                header: "Heat Usage",
+                muiTableHeadCellProps: { style: { color: "green" } }, //custom props
+                enableHiding: false, //disable a feature for this column
+            },
+        ],
+        []
+    );
+
+    //pass table options to useMaterialReactTable
+    const table = useMaterialReactTable({
+        columns,
+        data, //must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
+        enableColumnOrdering: true, //enable a feature for all columns
+        enableGlobalFilter: false, //turn off a feature
+    });
 
     return (
         <div>
@@ -22,7 +87,8 @@ function AllFacilities() {
                 type? Graph displays usage of water or electricity or gas at one
                 time
             </p>
-            <DataTable data={buildingsDataSample} />
+            {/* <DataTable data={buildingsDataSample} /> */}
+            <MaterialReactTable table={table} />
         </div>
     );
 }
