@@ -2,8 +2,17 @@ import { useEffect } from "react";
 import Chart from "chart.js/auto";
 import buildingsDataSample from "../sampleData/buildings.js";
 import DataTable from "./DataTable.js";
+import { useReactTable } from "@tanstack/react-table";
+
+import Facility from "./Types.ts";
 
 function AllFacilities() {
+    //react
+    const table = useReactTable({ columns, data });
+
+    /** @type {Facility[]} */
+    const [data, setData] = React.useState([]);
+
     return (
         <div>
             <h1>All Facilities</h1>
