@@ -1,19 +1,53 @@
-import { Link } from "react-router-dom";
-import './sidebar.css';
+import { useLocation, Link } from "react-router-dom";
+import "./sidebar.css";
 
 function Sidebar() {
-    return(
+    // parse pathname to determine what to highlight
+    const { pathname } = useLocation();
+    const [ignore, active] = pathname.split("/");
+
+    // store links and display names
+    const facilitiesLinks = [
+        { link: "all-facilities", name: "All Facilities" },
+        { link: "campus", name: "Campus Metrics" },
+        { link: "building", name: "Building Details" },
+        { link: "add-building", name: "New Building" },
+    ];
+    const invoicesLinks = [
+        { link: "invoices", name: "Invoices" },
+        { link: "add-invoice", name: "New Invoice" },
+    ];
+
+    return (
         <div className="sidebar">
             <ul>
-                <li><h3>Facilities</h3></li>
-                <Link to="/all-facilities"><li className="link">All Facilities</li></Link>
-                <Link to="/campus"><li className="link">Campus Metrics</li></Link>
-                <Link to="/building"><li className="link">Building Details</li></Link>
-                <Link to="/add-building"><li className="link">New Building</li></Link>
+                <li>
+                    <h3>Facilities</h3>
+                </li>
+                {facilitiesLinks.map((entry) => (
+                    <Link
+                        to={`/${entry.link}`}
+                        className={`listItem ${
+                            active === entry.link ? "active" : ""
+                        }`}
+                    >
+                        <li className="link">{entry.name}</li>
+                    </Link>
+                ))}
 
-                <li><h3>Invoices</h3></li>
-                <Link to="/invoices"><li className="link">Invoices</li></Link>
-                <Link to="/add-invoice"><li className="link">New Invoice</li></Link>
+                <li>
+                    <h3>Invoices</h3>
+                </li>
+                {invoicesLinks.map((entry) => (
+                    <Link
+                        to={`/${entry.link}`}
+                        className={`listItem ${
+                            active === entry.link ? "active" : ""
+                        }`}
+                    >
+                        <li className="link">{entry.name}</li>
+                    </Link>
+                ))}
             </ul>
         </div>
     );
