@@ -1,35 +1,9 @@
 import { useEffect } from "react";
 import Chart from "chart.js/auto";
+import buildingsDataSample from "../sampleData/buildings.js";
+import DataTable from "./DataTable.js";
 
 function AllFacilities() {
-    useEffect(() => {
-        const ctx = document.getElementById("chartContainer");
-        const chart = new Chart(ctx, {
-            type: "bar",
-            data: {
-                labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-                datasets: [
-                    {
-                        label: "# of Votes",
-                        data: [12, 19, 3, 5, 2, 3],
-                        borderWidth: 1,
-                    },
-                ],
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                    },
-                },
-                indexAxis: "y",
-            },
-        });
-        return () => {
-            chart.destroy();
-        };
-    }, []);
-
     return (
         <div>
             <h1>All Facilities</h1>
@@ -39,9 +13,7 @@ function AllFacilities() {
                 type? Graph displays usage of water or electricity or gas at one
                 time
             </p>
-            <div className="chartContainer">
-                <canvas id="chartContainer"></canvas>
-            </div>
+            <DataTable data={buildingsDataSample} />
         </div>
     );
 }

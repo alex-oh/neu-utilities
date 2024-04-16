@@ -1,0 +1,14 @@
+.table{
+    display: flex;
+    flex-direction: row;
+}
+.tableCol{
+    display: flex;
+    flex-direction: column;
+}
+.tableCell{
+    border: 1px solid black;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: .5em
+}
