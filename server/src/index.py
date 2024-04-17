@@ -31,15 +31,25 @@ def hello_world():
 @app.route("/campuses")
 def get_campuses():
     cnx = make_connection()
-    response = c.read_campuses(cnx)
+    query = ("SELECT DISTINCT campus_name, campus_id FROM campus")
+    response = c.query_list(cnx, query)
     cnx.close()
     return response
-
 
 @app.route("/all-buildings")
 def get_all_buildings():
     cnx = make_connection()
-    response = c.read_all_buildings(cnx)
+    query = ("CALL getFullBuildingDetails()")
+    response = c.query_object(cnx, query)
+    cnx.close()
+    return response
+
+@app.route("/invoices-delete-list")
+def getInvoicesDeleteList():
+    cnx = make_connection()
+    # response = c.getInvoicesForDelete(cnx)
+    query = ("SELECT invoice_id, i.date, building_name FROM invoice AS i JOIN building ON i.building_id = building.building_id")
+    response = c.query_object(cnx, query)
     cnx.close()
     return response
 

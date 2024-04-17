@@ -1,9 +1,7 @@
 from flask import request
 
-
-def read_campuses(cnx):
+def query_list(cnx, query):
     cursor = cnx.cursor()
-    query = ("SELECT DISTINCT campus_name, campus_id FROM campus")
 
     cursor.execute(query)
 
@@ -13,66 +11,35 @@ def read_campuses(cnx):
     for desc in cursor.description:
         column_names.append(desc[0])
 
-    campuses = []  # List to store the campus names
+    data = []  # List to store the campus names
     for row in cursor:  # parse the cursor response from the database
         data_piece = {}
         for key, val in enumerate(row):
             data_piece[column_names[key]] = val
-        campuses.append(data_piece)
-
+        data.append(data_piece)
     cursor.close()
-    return campuses
+    return data
 
-def read_all_buildings(cnx):
-    cursor = cnx.cursor()
-    query = ("CALL getFullBuildingDetails()")
+def query_object(cnx, query):
+    '''Queries database and returns a list of JSON style objects'''
+    cursor = cnx.cursor() # open a cursor from the connection
 
-    cursor.execute(query)
-
+    cursor.execute(query) # make the cursor execute the query. response will be returned into cursor
+    # parse the cursor response
+    # if it returns a bunch of rows, get the column names
     column_names = []
     for desc in cursor.description:
         column_names.append(desc[0])
 
-    buildings = []
-    for row in cursor:
-        b_data = {}
+    # convert row into a json object where the key is the column name, val is row value
+    data = []
+    for row in cursor: # parse the cursor response from the database
+        data_piece = {}
         for key, val in enumerate(row):
-            b_data[column_names[key]] = val
-        buildings.append(b_data)
+            data_piece[column_names[key]] = val
+        data.append(data_piece)
 
-    cursor.close()
-    return buildings
-
-# callproc method information found via mysql python connector docs at:
-# https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-callproc.html
-def get_num_workers_at_building(cnx, building_id):
-
-    cursor = cnx.cursor()
-    cursor.callproc('getNumWorkersAtBuilding', [building_id])
-
-    result = cursor.fetchone()[0]
-    
-    cursor.close()
-    
-    return result
-
-def get_open_tickets(cnx, building_id):
-
-    cursor = cnx.cursor()
-    cursor.callproc('getOpenTickets', [building_id])
-
-    result = cursor.fetchone()[0]
-
-    cursor.close()
-    
-    return result
-
-
-def shutdown_server():
-    func = request.environ.get('werkzeug.server.shutdown')
-    if func is None:
-        raise RuntimeError('Not running with the Werkzeug Server')
-    func()
+    return data
 
 
 def callbackTemplate(cnx):
@@ -99,3 +66,29 @@ def callbackTemplate(cnx):
     '''
 
     return [{"key": "value"}]
+  
+# callproc method information found via mysql python connector docs at:
+# https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-callproc.html
+def get_num_workers_at_building(cnx, building_id):
+
+    cursor = cnx.cursor()
+    cursor.callproc('getNumWorkersAtBuilding', [building_id])
+
+    result = cursor.fetchone()[0]
+    
+    cursor.close()
+    
+    return result
+
+def get_open_tickets(cnx, building_id):
+
+    cursor = cnx.cursor()
+    cursor.callproc('getOpenTickets', [building_id])
+
+    result = cursor.fetchone()[0]
+
+    cursor.close()
+    
+    return result
+  
+    cursor.close() # close the cursor
