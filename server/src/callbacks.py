@@ -43,6 +43,30 @@ def read_all_buildings(cnx):
     cursor.close()
     return buildings
 
+# callproc method information found via mysql python connector docs at:
+# https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-callproc.html
+def get_num_workers_at_building(cnx, building_id):
+
+    cursor = cnx.cursor()
+    cursor.callproc('getNumWorkersAtBuilding', [building_id])
+
+    result = cursor.fetchone()[0]
+    
+    cursor.close()
+    
+    return result
+
+def get_open_tickets(cnx, building_id):
+
+    cursor = cnx.cursor()
+    cursor.callproc('getOpenTickets', [building_id])
+
+    result = cursor.fetchone()[0]
+
+    cursor.close()
+    
+    return result
+
 
 def shutdown_server():
     func = request.environ.get('werkzeug.server.shutdown')
