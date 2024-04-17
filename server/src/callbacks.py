@@ -21,9 +21,18 @@ def read_all_buildings(cnx):
 
     cursor.execute(query)
 
+    column_names = []
+    for desc in cursor.description:
+        column_names.append(desc[0])
+
     buildings = []
-    for c in cursor:
-        buildings.append(c)
+    for row in cursor:
+        b_data = {}
+        for key, val in enumerate(row):
+            b_data = {}
+        for idx, value in enumerate(row):
+            b_data[column_names[idx]] = value
+        buildings.append(b_data)
     
     cursor.close()
     return buildings

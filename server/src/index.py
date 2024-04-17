@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify, request
 
 from . import callbacks as c
 import mysql.connector
@@ -30,7 +30,7 @@ def shutdown():
 
 @app.route("/all-buildings")
 def get_all_buildings():
-    return c.read_all_buildings(cnx)
+    return jsonify(c.read_all_buildings(cnx))
 
 if __name__ == "__main__":
     app.run()
