@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Chart } from "chart.js";
+import { Chart, registerables } from "chart.js";
 
 const campusDefault = [
     { name: "Boston", id: 1 },
@@ -25,6 +25,7 @@ function CampusView() {
     // populate chart with data
     useEffect(() => {
         const ctx = document.getElementById("chartContainer");
+        Chart.register(...registerables);
         const chart = new Chart(ctx, {
             type: "bar",
             data: {
