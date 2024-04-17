@@ -63,6 +63,15 @@ def templateEndpoint():
 
     return response # return the response
 
+@app.route("/open-tickets/<int:building_id>")
+def get_open_tickets(building_id):
+    cnx = make_connection()
+    query = (f"SELECT getOpenTickets({building_id})")
+
+    response  = c.query_list(cnx, query)
+    cnx.close()
+    return response
+
 
 if __name__ == "__main__":
     app.run(threaded=True)
