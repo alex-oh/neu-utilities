@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request 
 # TODO: jsonify maybe needed but not necessary to return a proper json object?
 from flask_cors import CORS
-import os
+import os # for getting password from .env
 
 from . import callbacks as c
 import mysql.connector
