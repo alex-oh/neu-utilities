@@ -1,15 +1,24 @@
 from flask import request
 
+
 def read_campuses(cnx):
     cursor = cnx.cursor()
-    query = ("SELECT DISTINCT campus_name FROM campus")
+    query = ("SELECT DISTINCT campus_name, campus_id FROM campus")
 
     cursor.execute(query)
 
-    campuses = []  # List to store the campus names
+    # parse the cursor response
+    # if it returns a bunch of rows, get the column names
+    column_names = []
+    for desc in cursor.description:
+        column_names.append(desc[0])
 
-    for x in cursor:
-        campuses.append(x[0])  # Assuming campus_name is the first column
+    campuses = []  # List to store the campus names
+    for row in cursor:  # parse the cursor response from the database
+        data_piece = {}
+        for key, val in enumerate(row):
+            data_piece[column_names[key]] = val
+        campuses.append(data_piece)
 
     cursor.close()
     return campuses
@@ -30,15 +39,17 @@ def read_all_buildings(cnx):
         for key, val in enumerate(row):
             b_data[column_names[key]] = val
         buildings.append(b_data)
-    
+
     cursor.close()
     return buildings
+
 
 def shutdown_server():
     func = request.environ.get('werkzeug.server.shutdown')
     if func is None:
         raise RuntimeError('Not running with the Werkzeug Server')
     func()
+
 
 def callbackTemplate(cnx):
     '''

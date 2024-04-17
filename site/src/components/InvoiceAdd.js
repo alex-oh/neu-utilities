@@ -11,6 +11,7 @@ function InvoiceAdd() {
         water: "",
         heat: "",
         buildingId: "",
+        paymentAmt: ""
     });
 
     // function to handle any changes to the form
@@ -97,6 +98,17 @@ function InvoiceAdd() {
                             <option value={d.id}>{d.name}</option>
                         ))}
                     </select>
+                </div>
+                <div className="form-row">
+                    <label htmlFor="paymentAmt">Heating:</label>
+                    <br />
+                    <input
+                        type="number"
+                        id="paymentAmt"
+                        name="paymentAmt"
+                        value={formData.paymentAmt}
+                        onChange={handleChange}
+                    />
                 </div>
                 <input className="submit-button" type="submit" value="Submit" />
             </form>

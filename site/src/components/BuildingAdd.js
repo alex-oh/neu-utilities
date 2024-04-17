@@ -1,16 +1,31 @@
 import { useState, useEffect } from "react";
 import "./form.css";
 import DebugJson from "./DebugJson";
-
+import { getCampusList } from "../services/dropdownService.js";
 const dummyDepartments = ["Engineering", "Computer Science", "Math"];
 
 function BuildingAdd() {
+    const [campuses, setCampuses] = useState([]);
     const [formData, setFormData] = useState({
         name: "",
         occupancy: "",
         hours: "",
+        campus: "",
         department: "",
     });
+
+    // async function to populate dropdown menu content
+    const getDropdowns = async () => {
+        const tempCampuses = await getCampusList();
+        setCampuses(tempCampuses);
+
+        // const tempDepts = await getDepartmentsList();
+    };
+
+    // populate dropdown menu content
+    useEffect(() => {
+        getDropdowns();
+    }, []);
 
     // function to handle any changes to the form
     const handleChange = (e) => {
@@ -35,7 +50,7 @@ function BuildingAdd() {
     return (
         <div>
             <h1>Create New Building</h1>
-            <DebugJson data={formData}/>
+            <DebugJson data={formData} />
             <form onSubmit={handleSubmit}>
                 <div className="form-row">
                     <label htmlFor="name">Building Name:</label>
@@ -66,6 +81,19 @@ function BuildingAdd() {
                         value={formData.hours}
                         onChange={handleChange}
                     ></input>
+                </div>
+                <div className="form-row">
+                    <label htmlFor="campus">Campus:</label>
+                    <select
+                        name="campus"
+                        id="campus"
+                        value={formData.campus}
+                        onChange={handleChange}
+                    >
+                        {campuses.map((c) => (
+                            <option value={c.campus_id}>{c.campus_name}</option>
+                        ))}
+                    </select>
                 </div>
                 <div className="form-row">
                     <label htmlFor="department">Department Affiliated:</label>

@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
 import { Chart, registerables } from "chart.js";
+import { getCampusList } from "../services/dropdownService.js";
 
-const campusDefault = [
-    { name: "Boston", id: 1 },
-    { name: "Vancouver", id: 2 },
-    { name: "Silicon Valley", id: 3 },
-    { name: "Portland", id: 4 },
-];
 const buildingsDefault = [
     { building_name: "ISEC", building_id: 1 },
     { building_name: "EXP", building_id: 2 },
@@ -14,13 +9,23 @@ const buildingsDefault = [
 const utilitiesList = ["water", "electricity", "heating"];
 
 function CampusView() {
-    const [campusList, setCampusList] = useState(campusDefault);
+    const [campuses, setCampuses] = useState([]);
     const [buildings, setBuildings] = useState(buildingsDefault);
     const [campus, setCampus] = useState(null); // current campus selected
     const [utility, setUtility] = useState(null);
-    // TODO:
-    // get list of campuses
-    // list of buildings for the campus
+
+    // async function to populate dropdown menu content
+    const getDropdowns = async () => {
+        const tempCampuses = await getCampusList();
+        setCampuses(tempCampuses);
+
+        // const tempDepts = await getDepartmentsList();
+    };
+
+    // populate dropdown menu content
+    useEffect(() => {
+        getDropdowns();
+    }, []);
 
     // populate chart with data
     useEffect(() => {
@@ -72,9 +77,9 @@ function CampusView() {
             <div>
                 <select id="campusDropdown" onChange={campusSelectChange}>
                     <option value="">Select a Campus</option>
-                    {campusList.map((c) => (
-                        <option key={c.id} value={c.id}>
-                            {c.name}
+                    {campuses.map((c) => (
+                        <option key={c.campus_id} value={c.campus_id}>
+                            {c.campus_name}
                         </option>
                     ))}
                 </select>
