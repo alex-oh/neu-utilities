@@ -39,8 +39,6 @@ def query_object(cnx, query):
             data_piece[column_names[key]] = val
         data.append(data_piece)
 
-    cursor.close() # close the cursor
-
     return data
 
 
@@ -68,3 +66,29 @@ def callbackTemplate(cnx):
     '''
 
     return [{"key": "value"}]
+  
+# callproc method information found via mysql python connector docs at:
+# https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-callproc.html
+def get_num_workers_at_building(cnx, building_id):
+
+    cursor = cnx.cursor()
+    cursor.callproc('getNumWorkersAtBuilding', [building_id])
+
+    result = cursor.fetchone()[0]
+    
+    cursor.close()
+    
+    return result
+
+def get_open_tickets(cnx, building_id):
+
+    cursor = cnx.cursor()
+    cursor.callproc('getOpenTickets', [building_id])
+
+    result = cursor.fetchone()[0]
+
+    cursor.close()
+    
+    return result
+  
+    cursor.close() # close the cursor
