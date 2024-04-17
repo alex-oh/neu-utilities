@@ -1,7 +1,9 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 from . import callbacks as c
 import mysql.connector
+from mysql.connector import pooling
 
 config = {
   'user': 'root',
@@ -12,7 +14,10 @@ config = {
 }
 
 app = Flask(__name__)
-cnx = mysql.connector.connect(**config)
+CORS(app) # enable CORS for all routes
+
+def make_connection():
+    return mysql.connector.connect(**config)
 
 @app.route("/hello") # default method is GET
 def hello_world():
@@ -20,17 +25,22 @@ def hello_world():
 
 @app.route("/campuses")
 def get_campuses():
-    return c.read_campuses(cnx)
+    cnx = make_connection()
+    response = c.read_campuses(cnx)
+    cnx.close()
+    return response
 
 @app.route('/shutdown', methods=['POST'])
 def shutdown():
     c.shutdown_server()
-    cnx.close()
     return 'Server shutting down...'
 
 @app.route("/all-buildings")
 def get_all_buildings():
-    return jsonify(c.read_all_buildings(cnx))
+    cnx = make_connection()
+    response = c.read_all_buildings(cnx)
+    cnx.close()
+    return jsonify(response)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(threaded=True)

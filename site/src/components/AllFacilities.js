@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-// import Chart from "chart.js/auto";
 import buildingsDataSample from "../sampleData/buildings.js";
-// import DataTable from "./DataTable.js";
+import { getAllBuildings } from "../services/buildingServices.js";
 
 import {
     MaterialReactTable,
@@ -11,9 +10,14 @@ import {
 function AllFacilities() {
     const [data, setData] = useState([]);
 
+    const loadAllBuildings = async () => {
+        const tempData = await getAllBuildings();
+        setData(tempData);
+    };
     useEffect(() => {
         // query data needed for table
-        setData(buildingsDataSample);
+        // setData(buildingsDataSample);
+        loadAllBuildings();
     }, []);
 
     const columns = useMemo(
@@ -49,7 +53,7 @@ function AllFacilities() {
                 enableHiding: false, //disable a feature for this column
             },
             {
-                accessorKey: "total_electricity", //simple recommended way to define a column
+                accessorKey: "total_elec", //simple recommended way to define a column
                 header: "Electricity Usage",
                 muiTableHeadCellProps: { style: { color: "green" } }, //custom props
                 enableHiding: false, //disable a feature for this column
@@ -61,7 +65,7 @@ function AllFacilities() {
                 enableHiding: false, //disable a feature for this column
             },
             {
-                accessorKey: "total_heating", //simple recommended way to define a column
+                accessorKey: "total_heat", //simple recommended way to define a column
                 header: "Heat Usage",
                 muiTableHeadCellProps: { style: { color: "green" } }, //custom props
                 enableHiding: false, //disable a feature for this column
@@ -82,11 +86,7 @@ function AllFacilities() {
         <div>
             <h1>All Facilities</h1>
             <p>Display metrics of every building</p>
-            <p>
-                Maybe display a graph comparing every single building by utility
-                type? Graph displays usage of water or electricity or gas at one
-                time
-            </p>
+            {/* <p>{JSON.stringify(data)}</p> */}
             <MaterialReactTable table={table} />
         </div>
     );
