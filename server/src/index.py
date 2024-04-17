@@ -44,10 +44,9 @@ def get_all_buildings():
     cnx.close()
     return response
 
-@app.route("/invoices-delete-list")
+@app.route("/invoices/deletelist")
 def getInvoicesDeleteList():
     cnx = make_connection()
-    # response = c.getInvoicesForDelete(cnx)
     query = ("SELECT invoice_id, i.date, building_name FROM invoice AS i JOIN building ON i.building_id = building.building_id")
     response = c.query_object(cnx, query)
     cnx.close()
