@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import buildingsDataSample from "../sampleData/buildings.js";
-import { getAllBuildings } from "../services/buildingServices.js";
+import { getAllBuildings } from "../services/buildingService.js";
 
 import {
     MaterialReactTable,
