@@ -1,6 +1,9 @@
 from flask import Flask
 app = Flask(__name__)
 
-@app.route("/hello")
+@app.route("/hello") # default method is GET
 def hello_world():
-    return "Goodbye, World!"
+    return "hello, World!"
+
+if __name__ == "__main__":
+    app.run()
