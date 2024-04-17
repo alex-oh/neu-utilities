@@ -1,6 +1,5 @@
 from flask import request
 
-
 def read_campuses(cnx):
     cursor = cnx.cursor()
     query = ("SELECT DISTINCT campus_name FROM campus")
