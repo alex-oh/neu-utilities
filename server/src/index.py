@@ -1,27 +1,32 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request 
+# TODO: jsonify maybe needed but not necessary to return a proper json object?
 from flask_cors import CORS
+import os
 
 from . import callbacks as c
 import mysql.connector
 from mysql.connector import pooling
 
 config = {
-  'user': 'root',
-  'password': '95012638', # update this password
-  'host': '127.0.0.1',
-  'database': 'utilities',
-  'raise_on_warnings': True
+    'user': 'root',
+    'password': os.environ['MYSQL_PASSWORD'],
+    'host': '127.0.0.1',
+    'database': 'utilities',
+    'raise_on_warnings': True
 }
 
 app = Flask(__name__)
-CORS(app) # enable CORS for all routes
+CORS(app)  # enable CORS for all routes
+
 
 def make_connection():
     return mysql.connector.connect(**config)
 
-@app.route("/hello") # default method is GET
+
+@app.route("/hellotest")  # default method is GET
 def hello_world():
     return "hello, World!"
+
 
 @app.route("/campuses")
 def get_campuses():
@@ -30,17 +35,24 @@ def get_campuses():
     cnx.close()
     return response
 
-@app.route('/shutdown', methods=['POST'])
-def shutdown():
-    c.shutdown_server()
-    return 'Server shutting down...'
 
 @app.route("/all-buildings")
 def get_all_buildings():
     cnx = make_connection()
     response = c.read_all_buildings(cnx)
     cnx.close()
-    return jsonify(response)
+    return response
+
+'''template for API endpoint'''
+@app.route("/template-url")
+def templateEndpoint():
+    cnx = make_connection()  # open new connection
+    # execute callback function to query the database
+    response = c.callbackTemplate(cnx)
+    cnx.close()  # close the connection out after executing query
+
+    return response # return the response
+
 
 if __name__ == "__main__":
     app.run(threaded=True)

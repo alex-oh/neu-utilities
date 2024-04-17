@@ -22,9 +22,14 @@ Authors: Ethan Olesinski, Alex Oh
 ### Server:
 3. Navigate to the server directory from root: `cd server`
 4. run `pipenv install` to install all dependencies
+5. Inside of  `/server`, create a .env file and add your mysql database password.\
+In `/server/.env`:
+    ```
+    MYSQL_PASSWORD=passwordhere
+    ```
 ### Database
-5. Open the .sql database dump file from `/database` in a local mySQL database
-6. Run the dump file
+6. Open the .sql database dump file from `/database` in a local mySQL database
+7. Run the dump file
 
 ## Running this project
 1. _Database_: Open the SQL database connection if not already done

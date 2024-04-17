@@ -1,2 +1,3 @@
 # Top level gitignore for whole project
 *.DS_Store
+.env
