@@ -169,6 +169,29 @@ def insert_building():
 
     return jsonify(message='Building was inserted successfully'), 200
 
+@app.route("/insert-invoice", methods=["POST"])
+def insert_invoice():
+    
+    # parse the data from the request packet
+    data = request.get_json()
+    p_date = data["date"]
+    p_payment_status = data["payment_status"]
+    p_total_electricity_usage = data["total_electricity_usage"]
+    p_total_water_usage = data["total_water_usage"]
+    p_total_heat_usage = data["total_heat_usage"]
+    p_bill_amount = data["bill_amount"]
+    p_building_id = data["building_id"]
+    
+    # run the proceedure
+    cnx = make_connection()
+    cursor = cnx.cursor()
+    cursor.callproc("InsertInvoice", (p_date, p_payment_status, p_total_electricity_usage, p_total_water_usage, p_total_heat_usage, p_bill_amount, p_building_id))
+    cnx.commit()
+    cursor.close()
+    cnx.close()
+
+    return jsonify({"message": "Invoice was inserted successfully"}), 200
+
 
 if __name__ == "__main__":
     app.run(threaded=True)
