@@ -38,9 +38,18 @@ def query_object(cnx, query):
         for key, val in enumerate(row):
             data_piece[column_names[key]] = val
         data.append(data_piece)
-
+    cursor.close()
     return data
 
+def delete_query(cnx, query):
+    cursor = cnx.cursor() # open a cursor from the connection
+
+    cursor.execute(query) # make the cursor execute the query. response will be returned into cursor
+    cnx.commit() # commit the transaction
+    rows = cursor.rowcount
+
+    cursor.close()
+    return {"rows deleted": rows}
 
 def callbackTemplate(cnx):
     '''

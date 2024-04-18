@@ -7,6 +7,8 @@ import InvoiceAdd from "./components/InvoiceAdd";
 import InvoiceView from "./components/InvoiceView";
 import CampusView from "./components/CampusView";
 import AllFacilities from "./components/AllFacilities";
+import DeleteInvoice from "./components/DeleteInvoice";
+import DeleteBuilding from "./components/DeleteBuilding";
 
 function Dashboard() {
     return (
@@ -24,6 +26,8 @@ function Dashboard() {
                     <Route path="invoices" element={<InvoiceView />} />
                     <Route path="campus" element={<CampusView />} />
                     <Route path="all-facilities" element={<AllFacilities />} />
+                    <Route path="delete-building" element={<DeleteBuilding />} />
+                    <Route path="delete-invoice" element={<DeleteInvoice/>} />
                 </Routes>
             </div>
         </div>
