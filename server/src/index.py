@@ -210,18 +210,17 @@ def insert_building():
 
     return jsonify(message='Building was inserted successfully'), 200
 
-@app.route("/insert-invoice", methods=["POST"])
+@app.route("/invoice", methods=["POST"])
 def insert_invoice():
-    
     # parse the data from the request packet
     data = request.get_json()
     p_date = data["date"]
-    p_payment_status = data["payment_status"]
-    p_total_electricity_usage = data["total_electricity_usage"]
-    p_total_water_usage = data["total_water_usage"]
-    p_total_heat_usage = data["total_heat_usage"]
+    p_payment_status = data["paymentStatus"]
+    p_total_electricity_usage = data["electricity"]
+    p_total_water_usage = data["water"]
+    p_total_heat_usage = data["heat"]
     p_bill_amount = data["bill_amount"]
-    p_building_id = data["building_id"]
+    p_building_id = data["buildingId"]
     
     # run the proceedure
     cnx = make_connection()
