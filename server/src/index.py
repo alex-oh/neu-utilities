@@ -121,6 +121,14 @@ def invoiceRoute(invoice_id):
     cnx.close()
     return response
 
+@app.route("/departments")
+def getDepartmentsList():
+    cnx = make_connection()
+    query = ("SELECT * FROM department")
+    response = c.query_object(cnx, query)
+    cnx.close()
+    return response
+
 '''template for API endpoint'''
 
 
@@ -154,14 +162,14 @@ def get_departments():
     return response
 
 
-@app.route("/insert-building", methods=['POST'])
+@app.route("/building", methods=['POST'])
 def insert_building():
     data = request.json
-    building_name = data.get('building_name')
-    max_occupancy = data.get('max_occupancy')
-    hours_open = data.get('hours_open')
-    campus_id = data.get('campus_id')
-    dept_id = data.get('dept_id')
+    building_name = data.get('name')
+    max_occupancy = data.get('occupancy')
+    hours_open = data.get('hours')
+    campus_id = data.get('campus')
+    dept_id = data.get('department')
 
     cnx = make_connection()
     cursor = cnx.cursor()
@@ -179,7 +187,7 @@ def insert_building():
     if campus_exists == 0:
         cursor.close()
         cnx.close()
-        return jsonify(error='Please use an exisitng campus'), 400
+        return jsonify(error='Please use an existing campus'), 400
 
     if dept_exists == 0:
         cursor.close()
