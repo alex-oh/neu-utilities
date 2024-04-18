@@ -4,6 +4,8 @@ import {
     getBuildingListCampus,
 } from "../services/dropdownService.js";
 import { getBuildingDetail } from "../services/buildingService.js";
+import { checkJsonHasEmptyFields } from "../helper/helpers.js";
+import { printJsonObject } from "../helper/helpers.js";
 
 function BuildingView() {
     const [campuses, setCampuses] = useState([]);
@@ -49,17 +51,16 @@ function BuildingView() {
 
     // get building detail data
     useEffect(() => {
-        if (selection.building !== "") {
+        if (!checkJsonHasEmptyFields(selection)) {
             loadBuildingDetail(selection.building);
         } else {
             setBuildingDetail({}); // clear building detail to display
         }
-    }, [selection.building]);
+    }, [selection]);
 
     const loadBuildingDetail = async (building_id) => {
         const tempBuildingDetail = await getBuildingDetail(building_id);
-        console.log(tempBuildingDetail);
-        setBuildingDetail(tempBuildingDetail);
+        setBuildingDetail(tempBuildingDetail[0]);
     };
 
     return (
@@ -85,7 +86,14 @@ function BuildingView() {
                     </option>
                 ))}
             </select>
-            <p>{JSON.stringify(buildingDetail, null, 2)}</p>
+            {checkJsonHasEmptyFields(selection) ? (
+                <p>Select campus and building to display</p>
+            ) : null}
+            {!checkJsonHasEmptyFields(selection) &&
+            selection.building !== "" &&
+            buildingDetail
+                ? Object.keys(buildingDetail).map((key) => { return <><b>{key}:</b> {buildingDetail[key]}<br/></>; })
+                : null}
         </div>
     );
 }

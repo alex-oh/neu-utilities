@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getInvoices } from "../services/invoiceService";
 import { updateInvoicePaid } from "../services/invoiceService";
+import "./invoiceview.css";
 
 function InvoiceView() {
     const [invoices, setInvoices] = useState([]);
@@ -34,17 +35,29 @@ function InvoiceView() {
             <h1>Invoices</h1>
             {invoices.map((i) => {
                 return (
-                    <div key={i.invoice_id}>
-                        <p>{JSON.stringify(i)}</p>
-                        <input
-                            type="checkbox"
-                            className="paid-checkbox"
-                            id={i.invoice_id}
-                            name="paid"
-                            value="paid"
-                            checked={i.payment_status === 1}
-                            readOnly={true}
-                        />
+                    <div key={i.invoice_id} className="invoiceRow">
+                        {Object.keys(i).map((key) => {
+                            if (key !== "payment_status") {
+                                return (
+                                    <>
+                                        <b>{key}:</b> {i[key]}
+                                        <br />
+                                    </>
+                                );
+                            }
+                        })}
+                        <div>
+                            <b>invoice_paid:</b>{" "}
+                            <input
+                                type="checkbox"
+                                className="paid-checkbox"
+                                id={i.invoice_id}
+                                name="paid"
+                                value="paid"
+                                checked={i.payment_status === 1}
+                                readOnly={true}
+                            />
+                        </div>
                     </div>
                 );
             })}
