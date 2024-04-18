@@ -21,3 +21,8 @@ export const sendDeleteBuilding = async (b_id) => {
     const response = await axios.delete(SERVER_API.concat(`/building/${b_id}`));
     return response.data;
 }
+
+export const getBuildingDetail = async (b_id) => {
+    const response = await axios.get(SERVER_API.concat(`/building/${b_id}`));
+    return response.data;
+}
