@@ -32,6 +32,7 @@ function Sidebar() {
                         className={`listItem ${
                             active === entry.link ? "active" : ""
                         }`}
+                        key={entry.link}
                     >
                         <li className="link">{entry.name}</li>
                     </Link>
@@ -46,6 +47,7 @@ function Sidebar() {
                         className={`listItem ${
                             active === entry.link ? "active" : ""
                         }`}
+                        key={entry.link}
                     >
                         <li className="link">{entry.name}</li>
                     </Link>
