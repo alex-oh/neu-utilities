@@ -85,6 +85,13 @@ def buildingRoute(building_id):
     cnx.close()
     return response
 
+@app.route("/invoices/")
+def getInvoices():
+    cnx = make_connection()
+    query = ("SELECT i.*, building_name FROM invoice AS i JOIN building ON i.building_id = building.building_id")
+    response = c.query_object(cnx, query)
+    cnx.close()
+    return response
 
 @app.route("/invoices/deletelist")
 def getInvoicesDeleteList():
@@ -93,7 +100,6 @@ def getInvoicesDeleteList():
     response = c.query_object(cnx, query)
     cnx.close()
     return response
-
 
 @app.route("/invoice/<invoice_id>", methods=['GET', 'DELETE'])
 def invoiceRoute(invoice_id):
@@ -108,7 +114,6 @@ def invoiceRoute(invoice_id):
         response = c.delete_query(cnx, query)
     cnx.close()
     return response
-
 
 '''template for API endpoint'''
 
