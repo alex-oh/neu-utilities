@@ -51,6 +51,15 @@ def delete_query(cnx, query):
     cursor.close()
     return {"rows deleted": rows}
 
+def update_query(cnx, query):
+    cursor = cnx.cursor() # open a cursor from the connection
+
+    cursor.execute(query) # make the cursor execute the query. response will be returned into cursor
+    cnx.commit() # commit the transaction
+
+    cursor.close()
+    return {"success": True}
+
 def callbackTemplate(cnx):
     '''
     cursor = cnx.cursor() # open a cursor from the connection

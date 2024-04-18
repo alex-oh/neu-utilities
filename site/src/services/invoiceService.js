@@ -23,3 +23,11 @@ export const getInvoices = async () => {
     const response = await axios.get(SERVER_API.concat("/invoices"));
     return response.data;
 };
+
+export const updateInvoicePaid = async (invoice_id, paidStatus) => {
+    const response = await axios.put(
+        SERVER_API.concat(`/invoice/${invoice_id}`),
+        { paid: paidStatus }
+    );
+    return response.data;
+};

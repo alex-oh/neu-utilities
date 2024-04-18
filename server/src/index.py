@@ -101,7 +101,7 @@ def getInvoicesDeleteList():
     cnx.close()
     return response
 
-@app.route("/invoice/<invoice_id>", methods=['GET', 'DELETE'])
+@app.route("/invoice/<invoice_id>", methods=['GET', 'DELETE', 'PUT'])
 def invoiceRoute(invoice_id):
     cnx = make_connection()
     response = None
@@ -112,6 +112,12 @@ def invoiceRoute(invoice_id):
         print(f"Deleting invoice {invoice_id}")
         query = (f"CALL DeleteInvoice({invoice_id})")
         response = c.delete_query(cnx, query)
+    elif request.method == 'PUT':
+        paid_status = request.json['paid']
+        print(paid_status)
+        query = (f"UPDATE invoice SET payment_status = {paid_status} WHERE invoice_id = {invoice_id}");
+        response = c.update_query(cnx, query)
+        response = {"message": f"updated invoice {invoice_id}: {response['success']}"}
     cnx.close()
     return response
 
