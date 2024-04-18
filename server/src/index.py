@@ -107,6 +107,60 @@ def get_open_tickets(building_id):
     cnx.close()
     return response
 
+@app.route("/all-departments")
+def get_departments():
+    cnx = make_connection()
+    query = ("SELECT DISTINCT dept_id, dept_name FROM department")
+
+    response  = c.query_object(cnx, query)
+    cnx.close()
+    return response
+
+@app.route("/insert-building", methods=['POST'])
+def insert_building():
+    data = request.json
+    building_name = data.get('building_name')
+    max_occupancy = data.get('max_occupancy')
+    hours_open = data.get('hours_open')
+    campus_id = data.get('campus_id')
+    dept_id = data.get('dept_id')
+
+    cnx = make_connection()
+    cursor = cnx.cursor()
+
+    # check to see if a campus exists in the database or not
+    cursor.execute("SELECT COUNT(*) FROM campus WHERE campus_id = %s", (campus_id,))
+    campus_exists = cursor.fetchone()[0]
+
+    # check to see if the department exists in the database or not
+    cursor.execute("SELECT COUNT(*) FROM department WHERE dept_id = %s", (dept_id,))
+    dept_exists = cursor.fetchone()[0]
+
+    if campus_exists == 0:
+        cursor.close()
+        cnx.close()
+        return jsonify(error='Please use an exisitng campus'), 400
+
+    if dept_exists == 0:
+        cursor.close()
+        cnx.close()
+        return jsonify(error='Please use an existing department'), 400
+
+    # insert the building into the building table
+    cursor.execute("INSERT INTO building (building_name, max_occupancy, hours_open, campus_id) "
+                   "VALUES (%s, %s, %s, %s)", (building_name, max_occupancy, hours_open, campus_id))
+    building_id = cursor.lastrowid
+
+    # insert the department and building relationship into the has_space table
+    cursor.execute("INSERT INTO has_space (dept_id, building_id) VALUES (%s, %s)", (dept_id, building_id))
+
+    cnx.commit()
+
+    cursor.close()
+    cnx.close()
+
+    return jsonify(message='Building was inserted successfully'), 200
+
 
 if __name__ == "__main__":
     app.run(threaded=True)
