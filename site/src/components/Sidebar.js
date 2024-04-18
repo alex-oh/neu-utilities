@@ -12,10 +12,12 @@ function Sidebar() {
         { link: "campus", name: "Campus Metrics" },
         { link: "building", name: "Building Details" },
         { link: "add-building", name: "New Building" },
+        { link: "delete-building", name: "Delete Building" },
     ];
     const invoicesLinks = [
         { link: "invoices", name: "Invoices" },
         { link: "add-invoice", name: "New Invoice" },
+        { link: "delete-invoice", name: "Delete Invoice" },
     ];
 
     return (

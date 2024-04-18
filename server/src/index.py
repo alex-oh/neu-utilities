@@ -52,6 +52,20 @@ def getInvoicesDeleteList():
     cnx.close()
     return response
 
+@app.route("/invoice/<invoice_id>", methods=['GET', 'DELETE'])
+def invoiceRoute(invoice_id):
+    cnx = make_connection()
+    response = None
+    if request.method == 'GET':
+        query = (f"SELECT * FROM invoice WHERE invoice_id = {invoice_id}")
+        response = c.query_object(cnx, query)
+    elif request.method == 'DELETE':
+        print(f"Deleting invoice {invoice_id}")
+        query = (f"CALL DeleteInvoice({invoice_id})")
+        response = c.delete_query(cnx, query)
+    cnx.close()
+    return response
+
 '''template for API endpoint'''
 @app.route("/template-url")
 def templateEndpoint():
