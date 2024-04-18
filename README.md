@@ -4,13 +4,13 @@ Authors: Ethan Olesinski, Alex Oh
 
 ## Prerequisites
 ### Site
+- install node.js v19 or higher
+- install npm
+
+### Server
 - install python3
 - install pip
 - install pipenv: `pip install pipenv`
-
-### Server
-- install node.js v19 or higher
-- install npm
 
 ### Database
 - install mySQL Workbench
