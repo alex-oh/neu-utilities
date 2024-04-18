@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react";
 import "./form.css";
 import DebugJson from "./DebugJson";
-import { getCampusList } from "../services/dropdownService.js";
-const dummyDepartments = ["Engineering", "Computer Science", "Math"];
+import {
+    getCampusList,
+    getDepartmentsList,
+} from "../services/dropdownService.js";
+import { checkJsonHasEmptyFields } from "../helper/helpers.js";
+import { createBuilding } from "../services/buildingService.js";
 
 function BuildingAdd() {
     const [campuses, setCampuses] = useState([]);
+    const [depts, setDepts] = useState([]);
     const [formData, setFormData] = useState({
         name: "",
         occupancy: "",
@@ -13,13 +18,15 @@ function BuildingAdd() {
         campus: "",
         department: "",
     });
+    const [submitted, setSubmitted] = useState("")
 
     // async function to populate dropdown menu content
     const getDropdowns = async () => {
         const tempCampuses = await getCampusList();
         setCampuses(tempCampuses);
 
-        // const tempDepts = await getDepartmentsList();
+        const tempDepts = await getDepartmentsList();
+        setDepts(tempDepts);
     };
 
     // populate dropdown menu content
@@ -40,7 +47,20 @@ function BuildingAdd() {
     const handleSubmit = (e) => {
         e.preventDefault();
         // Add your form submission logic here
-        console.log("Form submitted:", formData);
+        if (!checkJsonHasEmptyFields(formData)) {
+            // submit form if json doesn't have empty fields
+            submitBuildingAdd(formData);
+            console.log("Form submitted:", formData);
+            setSubmitted("Submitted!")
+        }
+        else {
+            setSubmitted("");
+        }
+    };
+
+    // creates the building
+    const submitBuildingAdd = async (data) => {
+        await createBuilding(data);
     };
 
     /*
@@ -50,7 +70,7 @@ function BuildingAdd() {
     return (
         <div>
             <h1>Create New Building</h1>
-            <DebugJson data={formData} />
+            {/* <DebugJson data={formData} /> */}
             <form onSubmit={handleSubmit}>
                 <div className="form-row">
                     <label htmlFor="name">Building Name:</label>
@@ -65,7 +85,8 @@ function BuildingAdd() {
                 <div className="form-row">
                     <label htmlFor="occupancy">Maximum Occupancy:</label>
                     <input
-                        type="text"
+                        type="number"
+                        min="0"
                         id="occupancy"
                         name="occupancy"
                         value={formData.occupancy}
@@ -75,7 +96,9 @@ function BuildingAdd() {
                 <div className="form-row">
                     <label htmlFor="hours">Daily Hours Open:</label>
                     <input
-                        type="text"
+                        type="number"
+                        min="0"
+                        max="24"
                         id="hours"
                         name="hours"
                         value={formData.hours}
@@ -90,6 +113,7 @@ function BuildingAdd() {
                         value={formData.campus}
                         onChange={handleChange}
                     >
+                        <option value="">Select Campus</option>
                         {campuses.map((c) => (
                             <option value={c.campus_id}>{c.campus_name}</option>
                         ))}
@@ -103,13 +127,15 @@ function BuildingAdd() {
                         value={formData.department}
                         onChange={handleChange}
                     >
-                        {dummyDepartments.map((d) => (
-                            <option value={d}>{d}</option>
+                        <option value="">Select Dept</option>
+                        {depts.map((d) => (
+                            <option value={d.dept_id}>{d.dept_name}</option>
                         ))}
                     </select>
                 </div>
-                <input className="submit-button" type="submit" value="Submit" />
+                <input className="submit-button" type="submit" value="Submit" disabled={checkJsonHasEmptyFields(formData)}/>
             </form>
+            <p>{submitted}</p>
         </div>
     );
 }

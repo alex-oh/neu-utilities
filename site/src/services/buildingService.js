@@ -33,3 +33,8 @@ export const getBuildingsCampusMetric = async (campus_id) => {
     const response = await axios.get(SERVER_API.concat(`/buildings/${campus_id}`));
     return response.data;
 };
+
+export const createBuilding = async (buildingData) => {
+    const response = await axios.post(SERVER_API.concat('/building'), buildingData);
+    return response.data;
+}
