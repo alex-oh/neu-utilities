@@ -23,6 +23,6 @@ export const getDepartmentsList = async () => {
 }
 
 export const getBuildingListCampus = async (campus_id) => {
-    const response = await axios.get(SERVER_API.concat('/buildings/'.concat(campus_id)));
+    const response = await axios.get(SERVER_API.concat('/buildings/list/'.concat(campus_id)));
     return response.data;
 }

@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import { Chart, registerables } from "chart.js";
 import { getCampusList } from "../services/dropdownService.js";
+import { getBuildingsCampusMetric } from "../services/buildingService.js";
+import './campusview.css'
 
-const buildingsDefault = [
-    { building_name: "ISEC", building_id: 1 },
-    { building_name: "EXP", building_id: 2 },
+const utilities = [
+    { displayName: "Water", value: "water" },
+    { displayName: "Electricity", value: "electricity" },
+    { displayName: "Heating", value: "heat" },
 ];
-const utilitiesList = ["water", "electricity", "heating"];
 
 function CampusView() {
     const [campuses, setCampuses] = useState([]);
-    const [buildings, setBuildings] = useState(buildingsDefault);
+    const [buildings, setBuildings] = useState({});
     const [campus, setCampus] = useState(null); // current campus selected
     const [utility, setUtility] = useState(null);
 
@@ -18,8 +20,6 @@ function CampusView() {
     const getDropdowns = async () => {
         const tempCampuses = await getCampusList();
         setCampuses(tempCampuses);
-
-        // const tempDepts = await getDepartmentsList();
     };
 
     // populate dropdown menu content
@@ -31,14 +31,21 @@ function CampusView() {
     useEffect(() => {
         const ctx = document.getElementById("chartContainer");
         Chart.register(...registerables);
+
+        var chartData = [];
+
+        if (utility !== "") {
+            chartData = buildings[`${utility}`];
+        }
+
         const chart = new Chart(ctx, {
             type: "bar",
             data: {
-                labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+                labels: buildings.names,
                 datasets: [
                     {
-                        label: "# of Votes",
-                        data: [12, 19, 3, 5, 2, 3],
+                        label: "Utility Consumption",
+                        data: chartData,
                         borderWidth: 1,
                     },
                 ],
@@ -55,13 +62,46 @@ function CampusView() {
         return () => {
             chart.destroy();
         };
-    }, [buildings]);
+    }, [buildings, utility]);
 
     // updates the selected campus
     const campusSelectChange = () => {
         const newCampus = document.getElementById("campusDropdown").value;
         setCampus(newCampus);
     };
+
+    // get building metrics by campus
+    const loadBuildingsByCampus = async (campus_id) => {
+        const tempBuildingsObject = await getBuildingsCampusMetric(campus_id);
+        // process data
+        var buildingMetrics = {
+            names: [],
+            water: [],
+            heat: [],
+            electricity: [],
+        };
+        tempBuildingsObject.map((entry) => {
+            buildingMetrics.names.push(entry.building_name);
+            buildingMetrics.water.push(entry.total_water);
+            buildingMetrics.electricity.push(entry.total_elec);
+            buildingMetrics.heat.push(entry.total_heat);
+            return 1;
+        });
+
+        setBuildings(buildingMetrics);
+    };
+
+    // load buildings when campus is selected
+    useEffect(() => {
+        if (campus !== "") {
+            // query the database
+            loadBuildingsByCampus(campus);
+        } else {
+            setBuildings({});
+        }
+    }, [campus]);
+
+    // updates selected utility to view
     const utilitySelectChange = () => {
         const newUtilitySelection =
             document.getElementById("utilityDropdown").value;
@@ -70,28 +110,30 @@ function CampusView() {
 
     return (
         <div>
-            <p>Campus Id selected: {campus}</p>
-            <p>Utility selected: {utility}</p>
             <h1>Campus View</h1>
-            <p>Display metrics of each campus</p>
-            <div>
-                <select id="campusDropdown" onChange={campusSelectChange}>
-                    <option value="">Select a Campus</option>
-                    {campuses.map((c) => (
-                        <option key={c.campus_id} value={c.campus_id}>
-                            {c.campus_name}
-                        </option>
-                    ))}
-                </select>
-            
-                <select id="utilityDropdown" onChange={utilitySelectChange}>
-                    <option value="">Select a Utility</option>
-                    {utilitiesList.map((utility, index) => (
-                        <option key={index} value={utility}>
-                            {utility}
-                        </option>
-                    ))}
-                </select>
+            <div className="campusDropdowns">
+                <div className="campusDropdownItem">
+                    Select Campus:{" "}
+                    <select id="campusDropdown" onChange={campusSelectChange}>
+                        {/* <option value="">Select a Campus</option> */}
+                        {campuses.map((c) => (
+                            <option key={c.campus_id} value={c.campus_id}>
+                                {c.campus_name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    Select Utility:{" "}
+                    <select id="utilityDropdown" onChange={utilitySelectChange}>
+                        {/* <option value="">Select a Utility</option> */}
+                        {utilities.map((utility, index) => (
+                            <option key={index} value={utility.value}>
+                                {utility.displayName}
+                            </option>
+                        ))}
+                    </select>
+                </div>
             </div>
 
             <div className="chartContainer">
