@@ -47,7 +47,15 @@ def get_all_buildings():
 @app.route("/buildings/deletelist")
 def getBuildingsDeleteList():
     cnx = make_connection()
-    query = ("SELECT building_name, building_id, campus_name FROM building JOIN campus ON building.campus_id = campus.campus_id;")
+    query = ("SELECT building_name, building_id, campus_name FROM building JOIN campus ON building.campus_id = campus.campus_id")
+    response = c.query_object(cnx, query)
+    cnx.close()
+    return response
+
+@app.route("/buildings/<campus_id>")
+def getBuildingsListByCampus(campus_id):
+    cnx = make_connection()
+    query = (f"CALL getCampusBuildings({campus_id})")
     response = c.query_object(cnx, query)
     cnx.close()
     return response
@@ -57,7 +65,7 @@ def buildingRoute(building_id):
     cnx = make_connection()
     response = None
     if request.method == 'GET':
-        query = (f"SELECT * FROM building WHERE building_id = {building_id}")
+        query = (f"CALL getBuildingDetails({building_id})")
         response = c.query_object(cnx, query)
     elif request.method == 'DELETE':
         print(f"Deleting building {building_id}")
