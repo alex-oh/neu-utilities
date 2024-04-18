@@ -31,3 +31,8 @@ export const updateInvoicePaid = async (invoice_id, paidStatus) => {
     );
     return response.data;
 };
+
+export const createInvoice = async (data) => {
+    const response = await axios.post(SERVER_API.concat('/invoice'), data);
+    return response.data;
+}
