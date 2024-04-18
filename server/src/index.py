@@ -1,7 +1,7 @@
-from flask import Flask, jsonify, request 
+from flask import Flask, jsonify, request
 # TODO: jsonify maybe needed but not necessary to return a proper json object?
 from flask_cors import CORS
-import os # for getting password from .env
+import os  # for getting password from .env
 
 from . import callbacks as c
 import mysql.connector
@@ -36,6 +36,7 @@ def get_campuses():
     cnx.close()
     return response
 
+
 @app.route("/all-buildings")
 def get_all_buildings():
     cnx = make_connection()
@@ -43,6 +44,7 @@ def get_all_buildings():
     response = c.query_object(cnx, query)
     cnx.close()
     return response
+
 
 @app.route("/buildings/deletelist")
 def getBuildingsDeleteList():
@@ -52,10 +54,19 @@ def getBuildingsDeleteList():
     cnx.close()
     return response
 
-@app.route("/buildings/<campus_id>")
+
+@app.route("/buildings/list/<campus_id>")
 def getBuildingsListByCampus(campus_id):
     cnx = make_connection()
     query = (f"CALL getCampusBuildings({campus_id})")
+    response = c.query_object(cnx, query)
+    cnx.close()
+    return response
+
+@app.route("/buildings/<campus_id>")
+def getBuildingsMetricByCampus(campus_id):
+    cnx = make_connection()
+    query = (f"SELECT building_name, total_water, total_heat, total_elec FROM building WHERE campus_id = {campus_id}")
     response = c.query_object(cnx, query)
     cnx.close()
     return response
@@ -74,6 +85,7 @@ def buildingRoute(building_id):
     cnx.close()
     return response
 
+
 @app.route("/invoices/deletelist")
 def getInvoicesDeleteList():
     cnx = make_connection()
@@ -81,6 +93,7 @@ def getInvoicesDeleteList():
     response = c.query_object(cnx, query)
     cnx.close()
     return response
+
 
 @app.route("/invoice/<invoice_id>", methods=['GET', 'DELETE'])
 def invoiceRoute(invoice_id):
@@ -96,7 +109,10 @@ def invoiceRoute(invoice_id):
     cnx.close()
     return response
 
+
 '''template for API endpoint'''
+
+
 @app.route("/template-url")
 def templateEndpoint():
     cnx = make_connection()  # open new connection
@@ -104,25 +120,28 @@ def templateEndpoint():
     response = c.callbackTemplate(cnx)
     cnx.close()  # close the connection out after executing query
 
-    return response # return the response
+    return response  # return the response
+
 
 @app.route("/open-tickets/<int:building_id>")
 def get_open_tickets(building_id):
     cnx = make_connection()
     query = (f"SELECT getOpenTickets({building_id})")
 
-    response  = c.query_list(cnx, query)
+    response = c.query_list(cnx, query)
     cnx.close()
     return response
+
 
 @app.route("/all-departments")
 def get_departments():
     cnx = make_connection()
     query = ("SELECT DISTINCT dept_id, dept_name FROM department")
 
-    response  = c.query_object(cnx, query)
+    response = c.query_object(cnx, query)
     cnx.close()
     return response
+
 
 @app.route("/insert-building", methods=['POST'])
 def insert_building():
@@ -137,11 +156,13 @@ def insert_building():
     cursor = cnx.cursor()
 
     # check to see if a campus exists in the database or not
-    cursor.execute("SELECT COUNT(*) FROM campus WHERE campus_id = %s", (campus_id,))
+    cursor.execute(
+        "SELECT COUNT(*) FROM campus WHERE campus_id = %s", (campus_id,))
     campus_exists = cursor.fetchone()[0]
 
     # check to see if the department exists in the database or not
-    cursor.execute("SELECT COUNT(*) FROM department WHERE dept_id = %s", (dept_id,))
+    cursor.execute(
+        "SELECT COUNT(*) FROM department WHERE dept_id = %s", (dept_id,))
     dept_exists = cursor.fetchone()[0]
 
     if campus_exists == 0:
@@ -160,7 +181,8 @@ def insert_building():
     building_id = cursor.lastrowid
 
     # insert the department and building relationship into the has_space table
-    cursor.execute("INSERT INTO has_space (dept_id, building_id) VALUES (%s, %s)", (dept_id, building_id))
+    cursor.execute(
+        "INSERT INTO has_space (dept_id, building_id) VALUES (%s, %s)", (dept_id, building_id))
 
     cnx.commit()
 
@@ -168,29 +190,6 @@ def insert_building():
     cnx.close()
 
     return jsonify(message='Building was inserted successfully'), 200
-
-@app.route("/insert-invoice", methods=["POST"])
-def insert_invoice():
-    
-    # parse the data from the request packet
-    data = request.get_json()
-    p_date = data["date"]
-    p_payment_status = data["payment_status"]
-    p_total_electricity_usage = data["total_electricity_usage"]
-    p_total_water_usage = data["total_water_usage"]
-    p_total_heat_usage = data["total_heat_usage"]
-    p_bill_amount = data["bill_amount"]
-    p_building_id = data["building_id"]
-    
-    # run the proceedure
-    cnx = make_connection()
-    cursor = cnx.cursor()
-    cursor.callproc("InsertInvoice", (p_date, p_payment_status, p_total_electricity_usage, p_total_water_usage, p_total_heat_usage, p_bill_amount, p_building_id))
-    cnx.commit()
-    cursor.close()
-    cnx.close()
-
-    return jsonify({"message": "Invoice was inserted successfully"}), 200
 
 
 if __name__ == "__main__":

@@ -1,0 +1,8 @@
+.campusDropdowns {
+    display: flex;
+    flex-direction: row;
+}
+
+.campusDropdownItem {
+    margin: 0rem 1rem;
+}
