@@ -11,6 +11,7 @@ Authors: Ethan Olesinski, Alex Oh
 - install python3
 - install pip
 - install pipenv: `pip install pipenv`
+- install pyenv: `brew install pyenv`
 
 ### Database
 - install mySQL Workbench
