@@ -65,7 +65,6 @@ function BuildingView() {
     return (
         <div>
             <h1>Building Detail</h1>
-            <p>{JSON.stringify(selection)}</p>
             <select name="campus" id="campusDropdown" onChange={handleChange}>
                 <option value="">Select a Campus</option>
                 {campuses.map((c) => (
