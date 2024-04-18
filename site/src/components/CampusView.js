@@ -110,7 +110,8 @@ function CampusView() {
 
     return (
         <div>
-            <h1>Campus View</h1>
+            <h1>Campus Resource Consumption</h1>
+            <p><i>View amount of resources used per building on a particular campus.</i></p>
             <div className="campusDropdowns">
                 <div className="campusDropdownItem">
                     Select Campus:{" "}
