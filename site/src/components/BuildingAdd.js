@@ -18,7 +18,7 @@ function BuildingAdd() {
         campus: "",
         department: "",
     });
-    const [submitted, setSubmitted] = useState("")
+    const [submitted, setSubmitted] = useState("");
 
     // async function to populate dropdown menu content
     const getDropdowns = async () => {
@@ -51,9 +51,8 @@ function BuildingAdd() {
             // submit form if json doesn't have empty fields
             submitBuildingAdd(formData);
             console.log("Form submitted:", formData);
-            setSubmitted("Submitted!")
-        }
-        else {
+            setSubmitted("Submitted!");
+        } else {
             setSubmitted("");
         }
     };
@@ -133,7 +132,12 @@ function BuildingAdd() {
                         ))}
                     </select>
                 </div>
-                <input className="submit-button" type="submit" value="Submit" disabled={checkJsonHasEmptyFields(formData)}/>
+                <input
+                    className="submit-button"
+                    type="submit"
+                    value="Submit"
+                    disabled={checkJsonHasEmptyFields(formData)}
+                />
             </form>
             <p>{submitted}</p>
         </div>
