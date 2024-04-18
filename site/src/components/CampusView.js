@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Chart, registerables } from "chart.js";
 import { getCampusList } from "../services/dropdownService.js";
 import { getBuildingsCampusMetric } from "../services/buildingService.js";
-import './campusview.css'
+import "./campusview.css";
 
 const utilities = [
     { displayName: "Water", value: "water" },
@@ -115,7 +115,7 @@ function CampusView() {
                 <div className="campusDropdownItem">
                     Select Campus:{" "}
                     <select id="campusDropdown" onChange={campusSelectChange}>
-                        {/* <option value="">Select a Campus</option> */}
+                        <option value="">{"   "}</option>
                         {campuses.map((c) => (
                             <option key={c.campus_id} value={c.campus_id}>
                                 {c.campus_name}
@@ -126,7 +126,7 @@ function CampusView() {
                 <div>
                     Select Utility:{" "}
                     <select id="utilityDropdown" onChange={utilitySelectChange}>
-                        {/* <option value="">Select a Utility</option> */}
+                        <option value="">{"   "}</option>
                         {utilities.map((utility, index) => (
                             <option key={index} value={utility.value}>
                                 {utility.displayName}
