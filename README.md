@@ -1,6 +1,8 @@
 # NEU Utilities
 ## CS5200 DBMS Final Project
-Authors: Ethan Olesinski, Alex Oh
+**Authors:** Ethan Olesinski, Alex Oh
+
+**Demo Video:** https://vimeo.com/936524386
 
 ## Prerequisites
 ### Site
